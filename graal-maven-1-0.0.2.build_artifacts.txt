@@ -1,0 +1,3 @@
+[EXECUTABLE]
+graal-maven-1-0.0.2
+

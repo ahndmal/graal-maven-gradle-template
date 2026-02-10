@@ -14,32 +14,26 @@ repositories {
 
 graalvmNative {
     binaries {
-        named("main") {
-            javaLauncher.set(javaToolchains.launcherFor {
-                languageVersion.set(JavaLanguageVersion.of(19))
-            })
-            mainClass.set("com.andmal.Main")
-            verbose.set(true)
+        main {
+            javaLauncher = javaToolchains.launcherFor {
+                languageVersion = JavaLanguageVersion.of(21)
+            }
+            mainClass = "com.andmal.Main"
         }
     }
 }
 
-java {
-    toolchain {
-        version = JavaVersion.VERSION_24
-    }
-}
 
 tasks.jar {
     manifest {
         attributes["Main-Class"] = "com.andmal.Main"
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    from(sourceSets.main.get().output)
+    from sourceSets.main.output
     dependsOn(configurations.runtimeClasspath)
-    from({
-        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
-    })
+    from {
+            configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
 }
 
 dependencies {
